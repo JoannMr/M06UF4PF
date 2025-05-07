@@ -1,25 +1,15 @@
 import Form from '@/app/ui/invoices/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
-import { notFound } from 'next/navigation';
-
-interface PageProps {
-  params: { id: string } | Promise<{ id: string }>;
-}
-
-export default async function Page({ params }: PageProps) {
-  const resolvedParams = await Promise.resolve(params);
+ 
+export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>, searchParams?: Promise<any> }) {
+  const resolvedParams = await params;
   const id = resolvedParams.id;
-
   const [invoice, customers] = await Promise.all([
     fetchInvoiceById(id),
     fetchCustomers(),
   ]);
-
-  if (!invoice) {
-    notFound();
-  }
-
+  
   return (
     <main>
       <Breadcrumbs
@@ -34,5 +24,5 @@ export default async function Page({ params }: PageProps) {
       />
       <Form invoice={invoice} customers={customers} />
     </main>
-  );
+  )
 }
