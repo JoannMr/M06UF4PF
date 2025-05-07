@@ -3,15 +3,18 @@ import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const id = params.id;
+interface PageProps {
+  params: { id: string };
+}
+
+export default async function Page({ params }: PageProps) {
+  const { id } = params;
 
   const [invoice, customers] = await Promise.all([
     fetchInvoiceById(id),
     fetchCustomers(),
   ]);
 
-  // Si no se encuentra la factura, redirige a una página 404 o muestra un mensaje de error
   if (!invoice) {
     notFound();
   }
