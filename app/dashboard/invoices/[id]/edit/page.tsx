@@ -4,11 +4,12 @@ import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
-  params: { id: string };
+  params: { id: string } | Promise<{ id: string }>;
 }
 
 export default async function Page({ params }: PageProps) {
-  const id = params.id;
+  const resolvedParams = await Promise.resolve(params);
+  const id = resolvedParams.id;
 
   const [invoice, customers] = await Promise.all([
     fetchInvoiceById(id),
